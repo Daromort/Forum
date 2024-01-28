@@ -1,0 +1,25 @@
+﻿@using Forum_Management_System.Models.View
+@model ICollection<GroupViewModelMini>
+
+@Html.Partial("_SortButtons")
+@foreach (var group in Model)
+{
+    <div class="card mb-3">
+        <div class="card-body">
+            <h5 class="card-title">@group.Name</h5>
+            <p class="card-text">@group.Description</p>
+            <a href="#" class="card-link">View</a>
+        </div>
+    </div>
+}
+
+<!-- Pagination Button -->
+<div class="d-flex justify-content-between mb-3">
+    <div>
+        @Html.Partial("_PaginationPartial")
+    </div>
+    <!-- Previous/Next Page Buttons -->
+    <div>
+        @Html.Partial("_PageNavigationPartial")
+    </div>
+</div>

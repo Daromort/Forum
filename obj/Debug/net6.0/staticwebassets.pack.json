@@ -1,0 +1,57 @@
+{
+  "Files": [
+    {
+      "Id": "N:\\repos\\forum-management-system\\forum-management-system\\Forum Management System\\wwwroot\\css\\styles.css",
+      "PackagePath": "staticwebassets\\css\\styles.css"
+    },
+    {
+      "Id": "N:\\repos\\forum-management-system\\forum-management-system\\Forum Management System\\wwwroot\\js\\dist\\jquery.validate.min.js",
+      "PackagePath": "staticwebassets\\js\\dist\\jquery.validate.min.js"
+    },
+    {
+      "Id": "N:\\repos\\forum-management-system\\forum-management-system\\Forum Management System\\wwwroot\\js\\jquery-3.7.0.min.js",
+      "PackagePath": "staticwebassets\\js\\jquery-3.7.0.min.js"
+    },
+    {
+      "Id": "N:\\repos\\forum-management-system\\forum-management-system\\Forum Management System\\wwwroot\\js\\signalr\\dist\\browser\\signalr.js",
+      "PackagePath": "staticwebassets\\js\\signalr\\dist\\browser\\signalr.js"
+    },
+    {
+      "Id": "N:\\repos\\forum-management-system\\forum-management-system\\Forum Management System\\wwwroot\\js\\signalr\\dist\\browser\\signalr.min.js",
+      "PackagePath": "staticwebassets\\js\\signalr\\dist\\browser\\signalr.min.js"
+    },
+    {
+      "Id": "N:\\repos\\forum-management-system\\forum-management-system\\Forum Management System\\wwwroot\\js\\site.js",
+      "PackagePath": "staticwebassets\\js\\site.js"
+    },
+    {
+      "Id": "N:\\repos\\forum-management-system\\forum-management-system\\Forum Management System\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css"
+    },
+    {
+      "Id": "N:\\repos\\forum-management-system\\forum-management-system\\Forum Management System\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.min.css"
+    },
+    {
+      "Id": "N:\\repos\\forum-management-system\\forum-management-system\\Forum Management System\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js"
+    },
+    {
+      "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.Forum Management System.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.build.Forum Management System.props",
+      "PackagePath": "build\\Forum Management System.props"
+    },
+    {
+      "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.buildMultiTargeting.Forum Management System.props",
+      "PackagePath": "buildMultiTargeting\\Forum Management System.props"
+    },
+    {
+      "Id": "obj\\Debug\\net6.0\\staticwebassets\\msbuild.buildTransitive.Forum Management System.props",
+      "PackagePath": "buildTransitive\\Forum Management System.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

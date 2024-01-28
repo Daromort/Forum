@@ -1,0 +1,143 @@
+﻿@using Forum_Management_System.Models.View
+@model UserViewModel
+
+<style>
+    /* Your existing styles */
+
+    .sidebar-item .user-card-body {
+        background-color: #212529;
+        color: #fff;
+        padding: 2rem;
+    }
+    user.sidebar-item .sidebar.col-md-4{
+        border: none !important;
+    }
+
+    .sidebar-item .btn-outline-primary {
+        color: #fff;
+    }
+
+        .sidebar-item .btn-outline-primary:hover {
+            background-color: #fff;
+            color: #212529;
+        }
+
+    .sidebar-item .btn-primary {
+        background-color: #212529;
+        color: #fff;
+    }
+
+        .sidebar-item .btn-primary:hover {
+            background-color: #212529;
+            color: #fff;
+        }
+
+    .user-card-body {
+        color: #fff;
+        padding: 0;
+    }
+
+    .banner {
+        padding: 1rem;
+    }
+
+    .social-icons {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 1rem;
+    }
+
+    .social-icon {
+        color: #6c757d;
+        font-size: 28px;
+        margin: 0 0.5rem;
+        pointer-events: auto;
+    }
+
+        .social-icon.disabled {
+            color: #adb5bd;
+            pointer-events: none;
+        }
+
+    .stats-section {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+.stats-section div {
+    flex: 1;
+    text-align: center;
+}
+
+.separator-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+}
+
+.stats-section p {
+    margin-bottom: 0;
+    margin-top: 0.5rem;
+}
+</style>
+
+<div class="card user-card sidebar-item">
+    <div class="card-body user-card-body text-center">
+        <div class="mt-3 mb-4">
+            @if (Model.Photo is null)
+            {
+                <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png" alt="avatar" class="rounded-circle img-fluid" style="width: 100px;" />
+            }
+            else
+            {
+                <img src="data:image/png;base64, @Model.Photo" alt="Image" class="rounded-circle img-fluid" style="width: 100px; height: 100px" />
+            }
+        </div>
+        <h4 class="mb-2">@Model.FirstName @Model.LastName</h4>
+        <p class="mb-4">
+            @Model.Description
+        </p>
+        <div class="social-icons">
+            <a class="social-icon @(!string.IsNullOrEmpty(Model.FacebookProfile) ? string.Empty : "disabled")" href="@Model.FacebookProfile" target="_blank" rel="noopener noreferrer">
+                <ion-icon name="logo-facebook"></ion-icon>
+            </a>
+            <a class="social-icon @(!string.IsNullOrEmpty(Model.TwitterProfile) ? string.Empty : "disabled")" href="@Model.TwitterProfile" data-bs-toggle="modal" data-bs-target="#twitterModal">
+                <ion-icon name="logo-twitter"></ion-icon>
+            </a>
+            <a class="social-icon @(!string.IsNullOrEmpty(Model.InstagramProfile) ? string.Empty : "disabled")" href="@Model.InstagramProfile" data-bs-toggle="modal" data-bs-target="#instagramModal">
+                <ion-icon name="logo-instagram"></ion-icon>
+            </a>
+        </div>
+        <div class="stats-section">
+            <div class="d-flex justify-content-between text-center">
+                <div>
+                    <p class="mb-0">Karma</p>
+                    <p class="mb-2 h5">@Model.Karma</p>
+                </div>
+                <div class="separator-line"></div>
+                <div>
+                    <p class="mb-0">Posts</p>
+                    <p class="mb-2 h5">@Model.PostsCount</p>
+                </div>
+                <div class="separator-line"></div>
+                <div>
+                    <p class="mb-0">Comments</p>
+                    <p class="mb-2 h5">@Model.CommentCount</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // jQuery example to disable click on disabled social-icon
+    $(document).ready(function () {
+        $('.social-icon.disabled').click(function (e) {
+            e.preventDefault();
+        });
+    });
+</script>

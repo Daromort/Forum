@@ -1,0 +1,133 @@
+﻿<style>
+    .reply-input {
+        margin-top: 5px;
+        width: 100%;
+        background-color: #1a1d21;
+        color: white;
+        border: none;
+        padding: 8px;
+        border-radius: 4px;
+    }
+
+    .replies-button {
+        color: darkgray;
+        font-size: 14px;
+        margin-top: 8px;
+        text-align: left;
+        cursor: pointer;
+        display: none;
+    }
+
+    .custom-button {
+        background-color: #212529;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        font-size: 14px;
+        border-radius: 4px;
+    }
+
+        .custom-button:hover {
+            background-color: #777777;
+        }
+
+    .comment-container {
+        margin-bottom: 10px;
+    }
+</style>
+
+@foreach (var comment in Model)
+{
+    <div class="comment-container">
+        <div class="card card-mini mb-3">
+            <div class="like-bar like-bar-mini">
+                <div class="like-container">
+                    <ion-icon name="arrow-up-circle-outline"></ion-icon>
+                    <span class="likes-count likes-count-mini">@comment.LikesCount</span>
+                    <ion-icon name="arrow-down-circle-outline"></ion-icon>
+                </div>
+            </div>
+            <div class="card-body card-body-mini">
+                <div class="top-bar top-bar-mini">
+                    <img class="user-icon user-icon-mini" src="@(!String.IsNullOrEmpty(comment.User.Photo) ? $"data:image/png;base64, {comment.User.Photo}" : "http://ssl.gstatic.com/accounts/ui/avatar_2x.png")" alt="avatar" style="width: 18px; height: 18px; object-fit: cover; border-radius:50%;" />
+                    <a href="/User/Preview/@comment.User.ID" class="username username-mini">u/@comment.User.Username</a>
+                    <span class="elapsed-time elapsed-time-mini" data-iso-time="@comment.CreatedAt.ToString("o")">@comment.CreatedAt</span>
+                </div>
+                <p class="card-content card-content-mini">@comment.Message</p>
+                <div class="reply-container">
+                    <input type='text' class='reply-input' data-comment-id='@comment.ID' />
+                </div>
+                <div class="replies-container" id="comment-@comment.ID"></div>
+                <div class="replies-button" id="replies-button-@comment.ID"></div>
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    $(document).ready(function () {
+        $(".reply-input").on("keyup", function (e) {
+            if (e.keyCode === 13) {
+                var commentId = $(this).data("comment-id");
+                var replyMessage = $(this).val();
+
+                $.ajax({
+                    url: "/Comment/Reply",
+                    type: "POST",
+                    data: {
+                        commentId: commentId,
+                        replyMessage: replyMessage
+                    },
+                    success: function () {
+                        reloadComments(commentId);
+                    }
+                });
+
+                $(this).val("");
+            }
+        });
+
+        $(".replies-button").each(function () {
+            var commentId = $(this).attr("id").split("-")[2];
+            var repliesButton = $(this);
+
+            $.ajax({
+                url: "/Comment/CheckReply/" + commentId,
+                type: "GET",
+                success: function (response) {
+                    if (response.hasReplies) {
+                        repliesButton.html("<button class='custom-button'>Replies</button>");
+                        repliesButton.on("click", function () {
+                            loadReplies(commentId);
+                        });
+                    }
+                }
+            });
+        });
+
+        function reloadComments(commentId) {
+            // Assuming you have a function called "reloadComments" in your Comment controller
+            $.ajax({
+                url: "/Comment/Reload/" + commentId,
+                type: "GET",
+                success: function () {
+                    // Reload the comments section or perform any necessary updates
+                }
+            });
+        }
+
+        function loadReplies(commentId) {
+            var repliesContainer = $("#comment-" + commentId + " .replies-container");
+
+            $.ajax({
+                url: "/Comment/GetReplies/" + commentId,
+                type: "GET",
+                success: function (replies) {
+                    repliesContainer.html(replies);
+                }
+            });
+        }
+    });
+</script>
+
+

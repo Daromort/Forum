@@ -1,0 +1,74 @@
+﻿<div>
+    <div class="d-flex justify-content-between mb-3">
+        <!-- Previous/Next Page Buttons -->
+        <div>
+            <button class="btn btn-dark mr-2" id="prevPageButton">Previous Page</button>
+            <button class="btn btn-dark" id="nextPageButton">Next Page</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Initial CheckNext call to set the state of the buttons on page load.
+    $(document).ready(function () {
+        updateButtons();
+    });
+
+    // Function to update the state of the buttons based on page number and next page existence.
+    function updateButtons() {
+        // Disable the previous button if the page number is 1.
+        if (parameters.page <= 1) {
+            $('#prevPageButton').prop('disabled', true);
+        } else {
+            $('#prevPageButton').prop('disabled', false);
+        }
+
+        // Fetch the controller name from the current url
+        var controller = window.location.pathname.split('/')[1];
+
+        // If there's no controller in the URL, use 'Home' as the default controller
+        if (!controller) {
+            controller = 'Home';
+        }
+
+        var url = '/' + controller + '/CheckNext' + type;
+
+        if (typeof userId !== 'undefined' && userId != 0) {
+            url += '/' + userId;
+        }
+
+        $.ajax({
+            url: url,
+            data: parameters,
+            type: 'GET',
+            success: function (data) {
+                if (!data) {
+                    $('#nextPageButton').prop('disabled', true);
+                } else {
+                    $('#nextPageButton').prop('disabled', false);
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(textStatus, errorThrown);
+            }
+        });
+    }
+
+    $('#prevPageButton').click(function (e) {
+        e.preventDefault();
+        // Decrement the page parameter by 1 and update the URL.
+        updateURLParameter('page', parameters.page - 1);
+        // Load the partial view with the new parameters.
+        loadPartial(parameters);
+    });
+
+    $('#nextPageButton').click(function (e) {
+        e.preventDefault();
+        // Increment the page parameter by 1 and update the URL.
+        updateURLParameter('page', parameters.page + 1);
+        // Load the partial view with the new parameters.
+        loadPartial(parameters);
+    });
+</script>
+
+

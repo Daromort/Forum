@@ -1,0 +1,94 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims
+@{
+    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    var previewUrl = $"http://localhost:5000/User/Preview/{userId}";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Add your styles and scripts here -->
+    <style>
+        .navbar .dropdown-menu {
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #212529;
+            color: #fff;
+        }
+
+        .dropdown-item {
+            color: #fff;
+        }
+
+        .nav-item {
+            min-width: 70px;
+            text-align: center;
+        }
+
+        .navbar .dropdown-menu .dropdown-item:hover {
+            background-color: #fff;
+            color: #212529;
+        }
+
+        .user-dropdown-toggle::after {
+            position: relative;
+        }
+
+        .user-dropdown-toggle {
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">Logo</a>
+            @Html.Partial("_SearchBar")
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Home</a>
+                    </li>
+                    <li class="nav-item dropdown nav-item-user">
+                        <a class="nav-link dropdown-toggle user-dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            @await Component.InvokeAsync("UserNavbar")
+                        </a>
+                        <ul class="dropdown-menu user-dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <li><a class="dropdown-item" href="@previewUrl">Profile</a></li>
+                            <li><a class="dropdown-item" href="http://localhost:5000/User/Profile">Settings</a></li>
+                            <li><a class="dropdown-item" href="#">Create a Post</a></li>
+                            <li><a class="dropdown-item" href="#">Create a Group</a></li>
+                            <li><a class="dropdown-item" href="#">Log Out</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- Rest of your page content -->
+</body>
+</html>
+<script>
+    $(document).ready(function () {
+        $('.user-dropdown-toggle').on('click', function () {
+            var dropdownMenu = $(this).next('.user-dropdown-menu');
+            dropdownMenu.toggleClass('show');
+            $(this).toggleClass('show');
+        });
+
+        $(document).on('click', function (e) {
+            var targetElement = e.target;
+            if (!$('.user-dropdown-toggle').is(targetElement) && $('.user-dropdown-toggle').has(targetElement).length === 0) {
+                $('.user-dropdown-toggle').removeClass('show');
+                $('.user-dropdown-menu').removeClass('show');
+            }
+        });
+    });
+</script>
+

@@ -1,0 +1,57 @@
+﻿<style>
+    .sort-buttons {
+        margin-bottom: 10px;
+        margin-top: 10px;
+        display: flex;
+        align-items: flex-start;
+    }
+
+    .sort-button {
+        width: 72px;
+        background-color: #212529;
+        color: #fff;
+        border: none;
+        padding: 10px;
+        margin-left: 0;
+        margin-right: 20px;
+        cursor: pointer;
+        border-radius: 5px;
+        text-align: center;
+    }
+
+        .sort-button:hover,
+        .sort-button.selected {
+            background-color: #fff;
+            color: #000;
+        }
+</style>
+<div class="sort-buttons">
+    <button class="sort-button" data-sort="Newest">Newest</button>
+    <button class="sort-button" data-sort="Popular">Popular</button>
+</div>
+<script>
+    $(document).ready(function () {
+        // Check if sort button state exists in localStorage
+        if (localStorage.getItem('selectedSortButton')) {
+            var sortButton = localStorage.getItem('selectedSortButton');
+            $('.sort-button[data-sort="' + sortButton + '"]').addClass('selected');
+            parameters.sort = sortButton;
+        } 
+
+        $('.sort-button').click(function () {
+            parameters.sort = $(this).data('sort');
+
+            // Change button selected state
+            $('.sort-button').removeClass('selected');
+            $(this).addClass('selected');
+
+            // Store sort button state in localStorage
+            localStorage.setItem('selectedSortButton', parameters.sort);
+
+            // Update the URL and load the partial
+            updateURLParameter('sort', parameters.sort);
+            loadPartial(parameters);
+        });
+    });
+</script>
+

@@ -1,0 +1,9 @@
+﻿@{
+    Layout = "_GuestLayout";
+}
+
+@section login {
+    @Html.Partial("_Login")
+}
+
+<button class="nav-link-signin">Sign In</button>

@@ -1,0 +1,500 @@
+﻿@model Forum_Management_System.Models.View.UserProfileViewModel
+@addTagHelper *,Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "_RoleLayout";
+}
+
+@{
+    var imageData = ViewData["photo"] as byte[];
+    string base64Image = string.Empty;
+    if (imageData != null)
+    {
+        base64Image =  Convert.ToBase64String(imageData);
+    }
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        .custom-label{
+            color:rgb(211,211,211);
+        }
+
+        .social-icon{
+            color: #aaaaaa;
+            transition: color 0.2s;
+            text-decoration: none;
+            margin: 0 3px;
+            font-size: 24px;
+        }
+
+        .social-icon:hover{
+            color: #333333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container bootstrap snippet">
+        <div class="row">
+            <div class="col-sm-10"><h1>@Model.Username</h1></div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3">
+                <!--left col-->
+
+
+                <div class="text-center">
+                    @if(imageData is null)
+                    {
+                        <img src="http://ssl.gstatic.com/accounts/ui/avatar_2x.png"  alt="avatar">
+                    }
+                    else
+                    {
+                        <img src="data:image/png;base64, @base64Image" alt="Image" style="height:192px; width:192px" />
+                    }
+                    
+                     <h6 style="color: rgb(211,211,211)">Upload a different photo</h6>
+    <form asp-controller="User" asp-action="AddImage" method="post" enctype="multipart/form-data">
+        <input type="file" asp-for="Photo" id="fileInput" class="form-control" onchange="validateFile(this)">
+         <span id="fileValidationMessage" class="text-danger"></span>
+        <button type="submit" id="uploadButton" disabled>Upload</button>
+    </form>
+                      <!-- HTML !-->
+                </div><br>
+
+                <ul class="list-group">
+                    <li class="list-group-item text-muted">Activity <i class="fa fa-dashboard fa-1x"></i></li>
+                     <li class="list-group-item text-right"><span class="pull-left"><strong>User Karma</strong></span> @Model.Karma</li>
+                    <li class="list-group-item text-right"><span class="pull-left"><strong>Comments Left</strong></span> @Model.CommentsCount</li>
+                    <li class="list-group-item text-right"><span class="pull-left"><strong>Posts</strong></span> @Model.PostsCount</li>
+                </ul>
+
+                <div class="panel panel-default">
+    <div class="panel-heading" style="color: rgb(211,211,211)">Social Media</div>
+    <div class="panel-body">
+        <a class="social-icon" href="#" data-bs-toggle="modal" data-bs-target="#twitterModal">
+            <ion-icon name="logo-twitter"></ion-icon>
+        </a>
+        <a class="social-icon" href="#" data-bs-toggle="modal" data-bs-target="#facebookModal">
+            <ion-icon name="logo-facebook"></ion-icon>
+        </a>
+        <a class="social-icon" href="#" data-bs-toggle="modal" data-bs-target="#instagramModal">
+            <ion-icon name="logo-instagram"></ion-icon>
+        </a>
+    </div>
+</div>
+
+<div class="modal fade" id="twitterModal" tabindex="-1" role="dialog" aria-labelledby="twitterModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="twitterModalLabel">Add Twitter Link</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="custom-label" for="twitterLink">Twitter Link:</label>
+                    <input type="text" class="form-control" id="twitterLink" placeholder="Enter Twitter link">
+                </div>
+                <span class="error-message text-danger"></span> <!-- Add this line for displaying the error message -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="updateTwitter()">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Facebook Modal -->
+<div class="modal fade" id="facebookModal" tabindex="-1" role="dialog" aria-labelledby="facebookModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="facebookModalLabel">Add Facebook Link</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="custom-label" for="facebookLink">Facebook Link:</label>
+                    <input type="text" class="form-control" id="facebookLink" placeholder="Enter Facebook link">
+                </div>
+                <span class="error-message text-danger"></span> <!-- Add this line for displaying the error message -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="updateFacebook()">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Instagram Modal -->
+<div class="modal fade" id="instagramModal" tabindex="-1" role="dialog" aria-labelledby="instagramModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="instagramModalLabel">Add Instagram Link</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="custom-label" for="instagramLink">Instagram Link:</label>
+                    <input type="text" class="form-control" id="instagramLink" placeholder="Enter Instagram link">
+                    <span class="error-message text-danger"></span> <!-- Add this line for displaying the error message -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="updateInstagram()">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+            </div><!--/col-3-->
+            <div class="col-sm-9">
+
+                <div class="tab-content">
+                    <div class="tab-pane active" id="home">
+                        <form class="form" asp-controller = "User" asp-action="Profile" method="post" >
+                            <div class="form-group">
+
+                                <div class="col-xs-6">
+                                    <label  asp-for="FirstName" class="custom-label"><h4>First name</h4></label>
+                                    <input type="text" asp-for = "FirstName" class="form-control"  placeholder="@ViewData["firstName"]" title="enter your first name if any.">
+                                    <span  asp-validation-for="FirstName" class="text-danger"></span>                              
+                                </div>
+                            </div>
+                            <div class="form-group">
+
+                                <div class="col-xs-6">
+                                    <label asp-for="LastName"  class="custom-label"><h4>Last name</h4></label>
+                                    <input type="text" asp-for = "LastName" class="form-control"   placeholder="@ViewData["lastName"]" title="enter your last name if any.">
+                                <span  asp-validation-for="LastName" class="text-danger"></span>   
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+
+                                <div class="col-xs-6">
+                                    <label asp-for="PhoneNumber"  class="custom-label"><h4>Phone</h4></label>
+                                    <input type="text"  asp-for = "PhoneNumber" class="form-control"   placeholder="@ViewData["phone"]" title="enter your phone number if any.">
+                                 <span  asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+
+                                <div class="col-xs-6">
+                                    <label asp-for="Password"  class="custom-label"><h4>Password</h4></label>
+                                    <input type="password" asp-for ="Password" class="form-control"   placeholder="password" title="enter your password.">
+                                <span  asp-validation-for="Password" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+
+                                <div class="col-xs-6">
+                                    <label asp-for="RepeatedPassword"  class="custom-label"><h4>Verify</h4></label>
+                                    <input type="password" asp-for ="RepeatedPassword"  class="form-control"   placeholder="repeat password" title="enter your password2.">
+                                <span span asp-validation-for="RepeatedPassword" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-xs-12">
+                                    <br>
+                                    <button class="btn btn-lg btn-success" type="submit"><i class="glyphicon glyphicon-ok-sign"></i> Save</button>
+                                </div>
+                            </div>
+                        </form>
+
+
+
+                    </div><!--/tab-pane-->
+                    <div class="tab-pane" id="messages">
+
+                        <h2></h2>
+
+                        <form class="form" action="##" method="post" id="registrationForm">
+                            <div class="form-group">
+
+                                <div class="col-xs-6">
+                                    <label for="first_name"><h4>First name</h4></label>
+                                    <input type="text" class="form-control" name="first_name" id="first_name" placeholder="first name" title="enter your first name if any.">
+                                </div>
+                            </div>
+                            <div class="form-group">
+
+                                <div class="col-xs-6">
+                                    <label for="last_name"><h4>Last name</h4></label>
+                                    <input type="text" class="form-control" name="last_name" id="last_name" placeholder="last name" title="enter your last name if any.">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+
+                                <div class="col-xs-6">
+                                    <label for="phone"><h4>Phone</h4></label>
+                                    <input type="text" class="form-control" name="phone" id="phone" placeholder="enter phone" title="enter your phone number if any.">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+
+                                <div class="col-xs-6">
+                                    <label for="email"><h4>Email</h4></label>
+                                    <input type="email" class="form-control" name="email" id="email" placeholder="you@email.com" title="enter your email.">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+
+                                <div class="col-xs-6">
+                                    <label for="password"><h4>Password</h4></label>
+                                    <input type="password" class="form-control" name="password" id="password" placeholder="password" title="enter your password.">
+                                </div>
+                            </div>
+                            <div class="form-group">
+
+                                <div class="col-xs-6">
+                                    <label for="password2"><h4>Verify</h4></label>
+                                    <input type="password" class="form-control" name="password2" id="password2" placeholder="password2" title="enter your password2.">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-xs-12">
+                                    <br>
+                                    <button class="btn btn-lg btn-success" type="submit"><i class="glyphicon glyphicon-ok-sign"></i> Save</button>
+                                    <button class="btn btn-lg" type="reset"><i class="glyphicon glyphicon-repeat"></i> Reset</button>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div><!--/tab-pane-->
+                    <div class="tab-pane" id="settings">
+
+                        <form class="form" action="##" method="post" id="registrationForm">
+                            <div class="form-group">
+
+                                <div class="col-xs-6">
+                                    <label for="first_name"><h4>First name</h4></label>
+                                    <input type="text" class="form-control" name="first_name" id="first_name" placeholder="first name" title="enter your first name if any.">
+                                </div>
+                            </div>
+                            <div class="form-group">
+
+                                <div class="col-xs-6">
+                                    <label for="last_name"><h4>Last name</h4></label>
+                                    <input type="text" class="form-control" name="last_name" id="last_name" placeholder="last name" title="enter your last name if any.">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+
+                                <div class="col-xs-6">
+                                    <label for="phone"><h4>Phone</h4></label>
+                                    <input type="text" class="form-control" name="phone" id="phone" placeholder="enter phone" title="enter your phone number if any.">
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <div class="col-xs-6">
+                                    <label for="email"><h4>Email</h4></label>
+                                    <input type="email" class="form-control" name="email" id="email" placeholder="you@email.com" title="enter your email.">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+
+                                <div class="col-xs-6">
+                                    <label for="password"><h4>Password</h4></label>
+                                    <input type="password" class="form-control" name="password" id="password" placeholder="password" title="enter your password.">
+                                </div>
+                            </div>
+                            <div class="form-group">
+
+                                <div class="col-xs-6">
+                                    <label for="password2"><h4>Verify</h4></label>
+                                    <input type="password" class="form-control" name="password2" id="password2" placeholder="password2" title="enter your password2.">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-xs-12">
+                                    <br>
+                                    <button class="btn btn-lg btn-success pull-right" type="submit"><i class="glyphicon glyphicon-ok-sign"></i> Save</button>
+                                    <!--<button class="btn btn-lg" type="reset"><i class="glyphicon glyphicon-repeat"></i> Reset</button>-->
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                </div><!--/tab-pane-->
+            </div><!--/tab-content-->
+
+        </div><!--/col-9-->
+    </div><!--/row-->
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    
+<script>
+document.getElementById('fileInput').addEventListener('change', function() {
+        document.getElementById('uploadForm').submit();
+    });
+</script>
+
+<script>
+        $(document).ready(function () {
+
+
+            var readURL = function (input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $('.avatar').attr('src', e.target.result);
+                    }
+
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+
+
+            $(".file-upload").on('change', function () {
+                readURL(this);
+            });
+        });
+    </script>
+   @*Upload profile picture function*@
+    <script>
+    const fileInput = document.getElementById('fileInput');
+    const uploadButton = document.getElementById('uploadButton');
+    const fileValidationMessage = document.getElementById('fileValidationMessage');
+
+    fileInput.addEventListener('change', function() {
+        const file = this.files[0];
+        var regex = /\.(jpg|jpeg|png)$/i;
+        var isMatch = regex.test(file.name.toLowerCase());
+
+        if (!file || !isMatch || file.size > 2 * 1024 * 1024) {
+            uploadButton.disabled = true; // Disable the upload button
+            if (!isMatch) {
+                fileValidationMessage.innerText = "Allowed image formats are jpg or png.";
+            } else if (file.size > 2 * 1024 * 1024) {
+                fileValidationMessage.innerText = "File size must be under 2 MB.";
+            } else {
+                fileValidationMessage.innerText = ""; // Clear the error message
+            }
+        } else {
+            fileValidationMessage.innerText = ""; // Clear the error message
+            uploadButton.disabled = false; // Enable the upload button
+        }
+    });
+</script>
+
+@*update twitter function*@
+<script>
+   function updateTwitter() {
+    var twitterLink = $('#twitterLink').val();
+    
+    // Validate the Twitter account URL
+    var regex = /^https?:\/\/twitter\.com\//;
+    if (!regex.test(twitterLink)) {
+        // Display an error message
+        $('#twitterModal').find('.error-message').text('Not a valid Twitter link.');
+        return;
+    }
+    
+    // Clear the error message
+    $('#twitterModal').find('.error-message').text('');
+    
+    // Make an AJAX request to the UpdateTwitter endpoint
+    $.ajax({
+        url: 'http://localhost:5000/User/UpdateTwitter',
+        type: 'POST',
+        data: { twitterLink: twitterLink },
+        success: function () {
+            // Handle the success response if needed
+            // Reload the page or perform any other actions
+            location.reload();
+        },
+        error: function (error) {
+            // Handle the error response if needed
+        }
+    });
+}
+</script>
+
+@*update facebook function*@
+<script>
+   function updateFacebook() {
+    var facebookLink = $('#facebookLink').val();
+    
+    // Validate the Facebook profile URL
+    var regex = /^https?:\/\/www\.facebook\.com\/profile/;
+    if (!regex.test(facebookLink)) {
+        // Display an error message
+        $('#facebookModal').find('.error-message').text('Not a valid Facebook link.');
+        return;
+    }
+    
+    // Clear the error message
+    $('#facebookModal').find('.error-message').text('');
+    
+    // Make an AJAX request to the UpdateFacebook endpoint
+    $.ajax({
+        url: 'http://localhost:5000/User/UpdateFacebook',
+        type: 'POST',
+        data: { facebookLink: facebookLink },
+        success: function () {
+            // Handle the success response if needed
+            // Reload the page or perform any other actions
+            location.reload();
+        },
+        error: function (error) {
+            // Handle the error response if needed
+        }
+    });
+}
+</script>
+
+@*update instagram function*@
+<script>
+   function updateInstagram() {
+    var instagramLink = $('#instagramLink').val();
+    
+    // Validate the Instagram profile URL
+    var regex = /^https?:\/\/www\.instagram\.com\//;
+    if (!regex.test(instagramLink)) {
+        // Display an error message
+        $('#instagramModal').find('.error-message').text('Not a valid Instagram link.');
+        return;
+    }
+    
+    // Clear the error message
+    $('#instagramModal').find('.error-message').text('');
+    
+    // Make an AJAX request to the UpdateInstagram endpoint
+    $.ajax({
+        url: 'http://localhost:5000/User/UpdateInstagram',
+        type: 'POST',
+        data: { instagramLink: instagramLink },
+        success: function () {
+            // Handle the success response if needed
+            // Reload the page or perform any other actions
+            location.reload();
+        },
+        error: function (error) {
+            // Handle the error response if needed
+        }
+    });
+}
+</script>
+</body>
+</html>

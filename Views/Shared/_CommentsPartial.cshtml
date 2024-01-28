@@ -1,0 +1,26 @@
+﻿@using Forum_Management_System.Models.View
+@model ICollection<CommentViewModel>
+
+<style>
+</style>
+
+@Html.Partial("_SortButtons")
+@foreach (var comment in Model)
+{
+    @Html.Partial("~/Views/Shared/_CommentPartial.cshtml", comment)
+}
+
+<!-- Pagination Button -->
+<div class="d-flex justify-content-between mb-3">
+    <div>
+        @Html.Partial("_PaginationPartial")
+    </div>
+    <!-- Previous/Next Page Buttons -->
+    <div>
+        @Html.Partial("_PageNavigationPartial")
+    </div>
+</div>
+
+<script>
+</script>
+

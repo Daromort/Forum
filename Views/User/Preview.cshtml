@@ -1,0 +1,133 @@
+﻿@using Forum_Management_System.Models
+@using System.Text.Json
+@model QueryParameters
+@{
+    Layout = "_RoleLayout";
+    var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+    var parameters = JsonSerializer.Serialize(Model, options);
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Preview</title>
+    <!-- Add your CSS here -->
+    <style>
+        .user-banner-import{
+            border: none !important;
+        }
+        .btn.btn-secondary {
+            background-color: #212529;
+            color: white;
+        }
+        .btn.btn-secondary:hover,
+        .btn.btn-secondary.active {
+            background-color: white;
+            color: #212529;
+        }
+    </style>
+</head>
+<body>
+    <div class="full-page-container">
+        <div class="container mt-4">
+            <h1 class="mt-0">User Preview</h1>
+            <div class="row">
+                <div class="col-md-8">
+                    <!-- Top Bar -->
+                    <div class="nav-scroller py-1 mb-2">
+                        <nav class="nav d-flex justify-content-between">
+                            <a class="btn btn-secondary d-block mb-2" href="#" id="loadPosts" data-type="Posts">Posts</a>
+                            <a class="btn btn-secondary d-block mb-2" href="#" id="loadComments" data-type="Comments">Comments</a>
+                            <a class="btn btn-secondary d-block mb-2" href="#" id="loadGroups" data-type="Groups">Groups</a>
+                        </nav>
+                    </div>
+
+                    <!-- Main Content -->
+                    <div id="mainContent"></div>
+                </div>
+                <div class="col-md-4 user-banner-import" id="sidebar">
+                    <div class id="userBanner">
+                        <!-- UserBanner will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var parameters = @Html.Raw(parameters);
+        var userId = window.location.href.split('/').pop();
+        var type;
+
+        // Event handlers
+        $('.btn.btn-secondary').click(function (e) {
+            e.preventDefault();
+
+            $(".btn.btn-secondary").removeClass("active");
+            $(this).addClass("active");
+
+            type = $(this).data("type");
+            localStorage.setItem('selectedType', type);
+
+            loadPartial(parameters);
+        });
+
+        function loadPartial(parameters) {
+            var url;
+            switch (type) {
+                case "Posts":
+                    url = '/User/GetUserPostsPartial/' + userId;
+                    break;
+                case "Comments":
+                    url = '/User/GetUserCommentsPartial/' + userId;
+                    break;
+                case "Groups":
+                    url = '/User/GetUserGroupsPartial/' + userId;
+                    break;
+                default:
+                    console.log('Unsupported type: ' + type);
+                    return;
+            }
+
+            parameters = parameters || {};
+
+            $.ajax({
+                url: url,
+                data: parameters,
+                type: 'GET',
+                success: function (data) {
+                    $('#mainContent').html(data);
+                    window.updateTimestamps();
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                }
+            });
+        }
+
+        function loadBanner() {
+            var url = '/User/GetUserBanner/' + userId;
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function (data) {
+                    $('#userBanner').html(data);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                }
+            });
+        }
+
+        // Load default content
+        $(document).ready(function () {
+            type = localStorage.getItem('selectedPreviewType') || "Posts";
+            $("a[data-type='" + type + "']").addClass("active").click();
+            loadBanner();
+        });
+    </script>
+
+</body>
+</html>

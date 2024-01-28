@@ -1,0 +1,83 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="@Url.Content("~/css/styles.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/lib/bootstrap/dist/css/bootstrap.min.css")" />
+    <style>
+        body {
+            background: linear-gradient(33deg, rgba(32,34,36,1) 0%, rgba(26,27,28,1) 8%, rgba(23,23,24,1) 24%, rgba(17,16,16,1) 61%, rgba(23,23,24,1) 79%, rgba(26,27,28,1) 93%, rgba(32,34,36,1) 100%);
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        .navbar {
+            background-color: #212529;
+        }
+
+        .navbar-brand {
+            color: #fff;
+        }
+
+        .nav-item .nav-link {
+            color: #fff;
+            transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            border-radius: 0.25rem;
+        }
+
+        .nav-item:hover .nav-link {
+            color: #212529;
+            background-color: #f8f9fa;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Scripts -->
+    <script src="@Url.Content("~/js/jquery-3.7.0.min.js")"></script>
+    <script src="@Url.Content("~/lib/bootstrap/dist/js/bootstrap.bundle.min.js")"></script> 
+    <script src = "@Url.Content("~/js/dist/jquery.validate.min.js")"> </script>
+    <script src = "https://ajax.aspnetcdn.com/ajax/mvc/5.2.3/jquery.validate.unobtrusive.min.js"> </script>
+    <script src="@Url.Content("~/lib/bootstrap/dist/js/bootstrap.bundle.min.js")"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    @RenderBody()
+    <script>
+
+        $(document).ready(function () {
+            var url = new URL(window.location.href);
+            // Clone the searchParams for iteration to avoid modification issues
+            var params = new URLSearchParams(url.searchParams.toString());
+
+            params.forEach((value, key) => {
+                url.searchParams.delete(key);
+                url.searchParams.set(key.toLowerCase(), value);
+            });
+
+            history.replaceState({}, '', url);
+        });
+
+        window.updateTimestamps = function () {
+            var elements = document.getElementsByClassName('elapsed-time');
+
+            for (var i = 0; i < elements.length; i++) {
+                var isoTime = elements[i].dataset.isoTime;
+                var momentTime = moment(isoTime);
+                elements[i].innerText = "Posted " + momentTime.fromNow();
+            }
+        }
+        window.updateTimestamps();
+        // You can leave the interval here to keep updating timestamps every minute
+        setInterval(window.updateTimestamps, 60000);
+        $(document).ready(function() {
+    $('.like-container ion-icon').on('click', function(e) {
+        if (!isLoggedIn) {
+            $('.nav-link-signin').click();
+            return;
+        }
+
+        // remaining code...
+    });
+    </script>
+</body>
+</html>

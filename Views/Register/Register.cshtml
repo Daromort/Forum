@@ -1,0 +1,180 @@
+﻿@model Forum_Management_System.Models.View.SignUpViewModel
+@addTagHelper *,Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "_RoleLayout";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Website Name</title>
+</head>
+<body>
+    <style>
+        .registration-section { 
+            height: 100vh;
+            z-index: 1;
+        }
+
+        .registration-container {
+            padding-top: 3rem;
+            padding-bottom: 3rem;
+        }
+
+        .registration-card {
+            border-radius: 1rem;
+            background-color: #212529;
+            color: #fff;
+        }
+
+        .card-body-p-5 {
+            padding: 3rem;
+            text-align: center;
+        }
+
+        .registration-header {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .registration-description {
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 3rem;
+        }
+
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .form-input-container {
+            margin-bottom: 1.5rem;
+            flex-basis: calc(50% - 0.5rem);
+        }
+
+        .form-input {
+            display: block;
+            width: 100%;
+            height: calc(1.5em + 0.75rem + 2px);
+            padding: 0.375rem 0.75rem;
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #495057;
+            background-color: #fff;
+            background-clip: padding-box;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+        .register-button {
+            display: inline-block;
+            font-weight: 400;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            user-select: none;
+            border: 1px solid transparent;
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            border-radius: 0.25rem;
+            color: #f8f9fa;
+            background-color: transparent;
+            border-color: #f8f9fa;
+            transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+        .register-button:hover {
+			color: #212529;
+			background-color: #f8f9fa;
+			border-color: #f8f9fa;
+        }
+
+        .register-footer {
+            margin-bottom: 0;
+        }
+
+        .register-footer-link {
+            color: #808080;
+            font-weight: bold;
+        }
+    </style>
+
+
+    <section class="registration-section">
+        <div class="container py-5 h-50 registration-container">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-12 col-lg-8">
+                    <div class="card registration-card">
+                        <div class="card-body p-5 text-center card-body-p-5">
+
+                            <div class="mb-md-5 mt-md-4 pb-5 registration-content">
+                                <h2 class="fw-bold mb-2 text-uppercase registration-header">Registration</h2>
+                                <p class="text-white-50 mb-5 registration-description">Please fill in the form to create an account!</p>
+
+                                <form asp-controller="Register" asp-action="Register" method="post">
+                                    <div class="form-row">
+                                    <div class="form-input-container col-md-6">
+                                 <input type="text" asp-for="FirstName" class="form-control"/>
+                                 <label asp-for="FirstName">First Name</label>
+                                <span asp-validation-for="FirstName" class="text-danger"></span>
+                                   </div>
+                                    <div class="form-input-container col-md-6">
+                                         <input type = "text" asp-for = "LastName" class = "form-control"> 
+                                        <label asp-for= "LastName">Last Name</label>
+                                         <span asp-validation-for="LastName" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-input-container col-md-6">
+                                        <input type="text" asp-for ="Username" class ="form-control" /> 
+                                        <label asp-for="Username">Username</label>
+                                        <span asp-validation-for="Username" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-input-container col-md-6">
+                                       <input type="text"  asp-for = "PhoneNumber" class ="form-control" />
+                                        <label asp-for="PhoneNumber">Phone Number</label>
+                                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="form-input-container">
+                                   <input  type = "email" asp-for="Email" class ="form-control" />
+                                    <label asp-for="Email">Email Address</label>
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-input-container">
+                                   <input type="password" asp-for="Password" class ="form-control"/>
+                                    <label asp-for="Password">Password</label>
+                                    <span asp-validation-for="Password" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-input-container">
+                                    <input type="password" asp-for = "RepeatedPassword" class ="form-control"/>
+                                    <label asp-for="RepeatedPassword">Repeat Password</label>
+                                     <span asp-validation-for="RepeatedPassword" class="text-danger"></span>
+                                </div>
+
+                                     <button class="register-button" type="submit">Register</button>
+                                      </form>
+                            </div>
+                           
+                            <div class="register-footer">
+                                <p class="mb-0">
+                                    Already a member? <a href="http://localhost:5000/#" class="register-footer-link">Sign In</a>
+                                </p>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
+

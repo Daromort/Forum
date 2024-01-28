@@ -1,0 +1,89 @@
+﻿@using Forum_Management_System.Models
+@using System.Text.Json
+@using System.Security.Claims;
+@model QueryParameters
+
+@{
+    Layout = "_RoleLayout";
+    var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+    var parameters = JsonSerializer.Serialize(Model, options);
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forum Management System</title>
+    <style>
+
+    </style>
+</head>
+<body>
+    <!-- Main Content -->
+    <div class="full-page-container">
+        <div class="container mt-4">
+            <h1 class="mt-0">Forum Management System</h1>
+            <div class="row">
+                <div class="col-md-8" id="mainContent"></div>
+                <div class="col-md-4">
+                    <!-- Sidebar -->
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Sidebar</h5>
+                            <ul class="list-group">
+                                <li class="list-group-item sidebar-item">Item 1</li>
+                                <li class="list-group-item sidebar-item">Item 2</li>
+                                <li class="list-group-item sidebar-item">Item 3</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var parameters = @Html.Raw(parameters);
+
+        $(document).ready(function () {
+            if (type !== "Posts" && type !== "Users" && type !== "Groups") {
+                type = "Posts";
+            }
+            loadPartial(parameters);
+        });
+
+
+
+        function loadPartial(parameters) {
+            console.log(type); // troubleshoot
+            var url;
+            switch (type) {
+                case "Posts":
+                    url = '/Home/GetPostsPartial';
+                    break;
+                case "Users":
+                    url = '/Home/GetUsersPartial';
+                    break;
+                case "Groups":
+                    url = '/Home/GetGroupsPartial';
+                    break;
+                default:
+                    console.log('Unsupported type: ' + type);
+                    return;
+            }
+            $.ajax({
+                url: url,
+                data: parameters,
+                type: 'GET',
+                success: function (data) {
+                    $('#mainContent').html(data);
+                    window.updateTimestamps();  // Run updateTimestamps after new content is added
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

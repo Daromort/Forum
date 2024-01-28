@@ -1,0 +1,129 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .search-bar {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+            width: 20%;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            z-index: 100;
+        }
+
+        .search-input {
+            border-top-left-radius: 0.25rem;
+            border-bottom-left-radius: 0.25rem;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        .dropdown.dropdown-search {
+            margin-left: -1px;
+            border-top-right-radius: 0.25rem;
+            border-bottom-right-radius: 0.25rem;
+            border: 1px solid #fff;
+            position: relative;
+        }
+
+        .dropdown-toggle.search-dropdown-toggle {
+            background-color: #212529;
+            border-color: #fff;
+            color: #fff;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+            overflow: hidden;
+            width: 80px;
+        }
+
+            .dropdown-toggle.search-dropdown-toggle:hover {
+                border-color: #fff;
+                color: #212529;
+                background: #fff;
+            }
+
+        .dropdown-menu.search-dropdown-menu {
+            border-radius: 0;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            min-width: auto;
+            padding: 0;
+        }
+
+        .dropdown-item.search-dropdown-item {
+            color: #fff;
+            background-color: #212529;
+            padding: 0.5rem 1rem;
+            transition: background-color 0.15s ease-in-out;
+            width: 80px;
+        }
+
+        .dropdown-item.search-dropdown-item:hover {
+                background-color: #fff;
+                color: #212529;
+            }
+    </style>
+</head>
+
+<body>
+    <form class="form-inline search-bar" action="">
+        <input class="form-control mr-2 search-input" type="search" placeholder="Search" aria-label="Search">
+        <div class="dropdown dropdown-search">
+            <button class="btn btn-secondary dropdown-toggle search-dropdown-toggle" type="button" id="searchDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+            <div class="dropdown-menu search-dropdown-menu" aria-labelledby="searchDropdown">
+                <a class="dropdown-item search-dropdown-item" href="#" data-value="Posts">Posts</a>
+                <a class="dropdown-item search-dropdown-item" href="#" data-value="Users">Users</a>
+                <a class="dropdown-item search-dropdown-item" href="#" data-value="Groups">Groups</a>
+            </div>
+        </div>
+    </form>
+</body>
+<script>
+    var type = localStorage.getItem('selectedSearchType') || "Posts";
+    var newType = type;
+    $(document).ready(function () {
+        $('#searchDropdown').text(type);
+        $('.search-dropdown-toggle').click(function () {
+            $('.search-dropdown-menu').toggleClass('show');
+        });
+
+        $(document).click(function (e) {
+            if (!$(e.target).closest('.dropdown-search').length) {
+                $('.search-dropdown-menu').removeClass('show');
+            }
+        });
+
+        $('.search-dropdown-item').click(function (e) {
+            e.preventDefault();
+            newType = $(this).attr('data-value');
+            // Store the chosen type in localStorage.
+            localStorage.setItem('selectedSearchType', newType);
+            $('.search-dropdown-toggle').text(newType);
+            $('.search-dropdown-menu').removeClass('show');
+            console.log('Search type:', newType);
+        });
+
+        $('.search-input').keydown(function (e) {
+            if (e.keyCode == 13) {
+                e.preventDefault();
+                var searchValue = $(this).val();
+                type = newType;
+
+                // Check if the current URL is the home page
+                var currentURL = window.location.href;
+                if (currentURL !== 'http://localhost:5000') {
+                    // If not, redirect to home page with search parameters
+                    window.location.href = `http://localhost:5000/?search=${searchValue}&type=${type}`;
+                } else {
+                    // If yes, retain the original functionality
+                    updateURLParameter('search', searchValue);
+                    loadPartial(parameters);
+                }
+            }
+        });
+    });
+</script>
+</html>
+
+

@@ -1,0 +1,26 @@
+﻿@using Forum_Management_System.Models.View
+@model ICollection<PostViewModelMini>
+
+    <style>
+        .card.card-body.mini:hover {
+        border: 1px solid white !important;
+    }
+    </style>
+
+<div class="content-container">
+    @Html.Partial("_SortButtons")
+    @foreach (var post in Model)
+    {
+        @Html.Partial("~/Views/Shared/_PostPartial.cshtml", post)
+    }
+
+<!-- Pagination Button -->
+<div class="d-flex justify-content-between mb-3">
+    <div>
+        @Html.Partial("_PaginationPartial")
+    </div>
+    <!-- Previous/Next Page Buttons -->
+    <div>
+        @Html.Partial("_PageNavigationPartial")
+    </div>
+</div>

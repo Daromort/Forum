@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+<div>
+    <div class="dropdown pagination-dropdown">
+        <button class="btn btn-dark dropdown-toggle pagination-dropdown-toggle" type="button" id="paginationDropdownButton">
+        </button>
+        <div class="dropdown-menu pagination-dropdown-menu" aria-labelledby="paginationDropdownButton">
+            <a class="dropdown-item pagination-dropdown-item" href="#">10</a>
+            <a class="dropdown-item pagination-dropdown-item" href="#">25</a>
+            <a class="dropdown-item pagination-dropdown-item" href="#">50</a>
+            <a class="dropdown-item pagination-dropdown-item" href="#">100</a>
+        </div>
+    </div>
+</div>
+    <script>
+        $(document).ready(function () {
+            $('#paginationDropdownButton').text(parameters.size);
+            $('.pagination-dropdown-toggle').click(function () {
+                $('.pagination-dropdown-menu').toggleClass('show');
+            });
+
+            $(document).click(function (e) {
+                if (!$(e.target).closest('.pagination-dropdown').length) {
+                    $('.pagination-dropdown-menu').removeClass('show');
+                }
+            });
+
+            // Update size when a dropdown item is clicked
+            $('.pagination-dropdown-item').click(function (e) {
+                e.preventDefault();
+                var size = $(this).text();
+                $('#paginationDropdownButton').text(size);
+                updateURLParameter('size', size);
+                loadPartial(parameters);
+            });
+        });
+    </script>
+</body>
+</html>

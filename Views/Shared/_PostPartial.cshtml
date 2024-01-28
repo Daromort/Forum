@@ -1,0 +1,84 @@
+﻿@using Forum_Management_System.Models.View
+@model PostViewModelMini
+
+<style>
+    .upvoted {
+        color: #fff;
+        transform: scale(1.2);
+    }
+
+    .downvoted {
+        color: #fff;
+        transform: scale(1.2);
+    }
+</style>
+
+<div class="card card-mini mb-3" data-post-id="@Model.ID">
+    <div class="like-bar like-bar-mini">
+        <div class="like-container" data-post-id="@Model.ID">
+            <ion-icon name="arrow-up-circle-outline" id="upvote-like-@(Model.ID)" class="upvote-button vote-button @(Model.HasUserLiked ? "upvoted" : "")"></ion-icon>
+            <span class="likes-count likes-count-mini">@Model.LikesCount</span>
+            <ion-icon name="arrow-down-circle-outline" id="downvote-like-@(Model.ID)" class="downvote-button vote-button @(Model.HasUserDisliked ? "downvoted" : "")"></ion-icon>
+        </div>
+    </div>
+    <div class="card-body card-body-mini">
+        <div class="top-bar top-bar-mini">
+            @if (@Model.Group != null)
+            {
+                <span class="group group-mini">g/@Model.Group.Name</span>
+                <a href="/User/Preview/@Model.User.ID" class="username username-mini">u/@Model.User.Username</a>
+                <span class="elapsed-time elapsed-time-mini" data-iso-time="@Model.CreatedAt.ToString("o")">@Model.CreatedAt</span>
+            }
+            else
+            {
+                <img class="user-icon user-icon-mini" src="@(!String.IsNullOrEmpty(@Model.User.Photo) ? $"data:image/png;base64, {@Model.User.Photo}" : "http://ssl.gstatic.com/accounts/ui/avatar_2x.png")" alt="avatar" style="width: 18px; height: 18px; object-fit: cover; border-radius:50%;" />
+                <a href="/User/Preview/@Model.User.ID" class="username username-mini">u/@Model.User.Username</a>
+                <span class="elapsed-time elapsed-time-mini" data-iso-time="@Model.CreatedAt.ToString("o")">@Model.CreatedAt</span>
+            }
+        </div>
+        <h5 class="card-title card-title-mini">@Model.Title</h5>
+        <p class="card-content card-content-mini">@Model.Content</p>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        var isAuthenticated = @Json.Serialize(User.Identity.IsAuthenticated);
+
+        $(".card[data-post-id='@Model.ID'] .upvote-button, .card[data-post-id='@Model.ID'] .downvote-button").click(function () {
+            if (!isAuthenticated) {
+                $('.nav-link-signin').click();
+                return;
+            }
+
+            var postId = $(this).closest(".card").data("post-id");
+            var voteButton = $(this);
+            var isUpvoteButton = voteButton.hasClass("upvote-button");
+
+            var url;
+            if (isUpvoteButton) {
+                url = voteButton.hasClass("upvoted") ? "/Post/RemoveLike/" : "/Post/Like/";
+            } else {
+                url = voteButton.hasClass("downvoted") ? "/Post/RemoveDislike/" : "/Post/Dislike/";
+            }
+
+            $.ajax({
+                url: url + postId,
+                type: "POST",
+                success: function () {
+                    reloadPost(postId);
+                }
+            });
+        });
+
+        function reloadPost(postId) {
+            $.ajax({
+                url: "/Post/Reload/" + postId,
+                type: "GET",
+                success: function (response) {
+                    $(".card[data-post-id='" + postId + "']").replaceWith(response);
+                }
+            });
+        }
+    });
+</script>

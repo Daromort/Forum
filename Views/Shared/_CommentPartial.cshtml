@@ -1,0 +1,76 @@
+﻿@using Forum_Management_System.Models.View
+@model CommentViewModel
+
+<style>
+    .upvoted {
+        color: #fff;
+        transform: scale(1.2);
+    }
+
+    .downvoted {
+        color: #fff;
+        transform: scale(1.2);
+    }
+</style>
+<div class="card card-mini mb-3" data-comment-id="@Model.ID">
+    <div class="like-bar like-bar-mini">
+        <div class="like-container" data-comment-id="@Model.ID">
+            <ion-icon name="arrow-up-circle-outline" id="upvote-like-@(Model.ID)" class="upvote-button vote-button @(Model.HasUserLiked ? "upvoted" : "")"></ion-icon>
+            <span class="likes-count likes-count-mini">@Model.LikesCount</span>
+            <ion-icon name="arrow-down-circle-outline" id="downvote-like-@(Model.ID)" class="downvote-button vote-button @(Model.HasUserDisliked ? "downvoted" : "")"></ion-icon>
+        </div>
+    </div>
+    <div class="card-body card-body-mini">
+        <div class="top-bar top-bar-mini">
+            <img class="user-icon user-icon-mini" src="@(!String.IsNullOrEmpty(Model.User.Photo) ? $"data:image/png;base64, {Model.User.Photo}" : "http://ssl.gstatic.com/accounts/ui/avatar_2x.png")" alt="avatar" style="width: 18px; height: 18px; object-fit: cover; border-radius:50%;" />
+            <a href="/User/Preview/@Model.User.ID" class="username username-mini">u/@Model.User.Username</a>
+            <span class="elapsed-time elapsed-time-mini" data-iso-time="@Model.CreatedAt.ToString("o")">@Model.CreatedAt</span>
+        </div>
+        <p class="card-content card-content-mini">@Model.Message</p>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        var isAuthenticated = @Json.Serialize(User.Identity.IsAuthenticated);
+
+        $(".card[data-comment-id='@Model.ID'] .upvote-button, .card[data-comment-id='@Model.ID'] .downvote-button").click(function () {
+            if (!isAuthenticated) {
+                $('.nav-link-signin').click();
+                return;
+            }
+
+            var commentId = $(this).closest(".card").data("comment-id");
+            var voteButton = $(this);
+            var isUpvoteButton = voteButton.hasClass("upvote-button");
+
+            var url;
+            if (isUpvoteButton) {
+                url = voteButton.hasClass("upvoted") ? "/Comment/RemoveLike/" : "/Comment/Like/";
+            } else {
+                url = voteButton.hasClass("downvoted") ? "/Comment/RemoveDislike/" : "/Comment/Dislike/";
+            }
+
+            $.ajax({
+                url: url + commentId,
+                type: "POST",
+                success: function () {
+                    reloadComment(commentId);
+                }
+            });
+        });
+
+        function reloadComment(commentId) {
+            $.ajax({
+                url: "/Comment/Reload/" + commentId,
+                type: "GET",
+                success: function (response) {
+                    $(".card[data-comment-id='" + commentId + "']").replaceWith(response);
+                }
+            });
+        }
+    });
+</script>
+
+
+
+

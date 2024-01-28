@@ -1,0 +1,178 @@
+﻿@using Forum_Management_System.Models.View
+@model PostViewModel
+@{
+    Layout = "_RoleLayout";
+}
+
+<style>
+    .post-container {
+        width: 50%;
+        margin: 0 auto;
+    }
+
+    .like-bar-post {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        margin: 0 !important;
+        background-color: #1a1d21 !important;
+        box-sizing: border-box !important;
+        width: 80px !important;
+        min-width: 80px !important;
+        position: relative !important;
+        overflow: hidden !important;
+        top: 0 !important;
+        bottom: 0 !important;
+    }
+
+    .like-container-post {
+        align-self: center !important;
+        width: 60% !important;
+        margin-top: 10px !important;
+    }
+
+    .top-bar-post .elapsed-time-post {
+        order: 3;
+        margin-left: 5px;
+    }
+
+    .user-icon-post {
+        order: 1;
+    }
+
+    .card-post {
+        display: flex;
+        flex-direction: row;
+        cursor: pointer;
+        border: 1px solid transparent;
+        position: relative;
+    }
+
+    .like-bar-post {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+        background-color: #1a1d21;
+        box-sizing: border-box;
+        width: 80px;
+        min-width: 80px;
+        position: relative;
+        overflow: hidden;
+        top: 0;
+        bottom: 0;
+    }
+
+    .username-post:hover {
+        color: #777777 !important;
+    }
+
+    .username-post {
+        text-decoration: none;
+    }
+
+    .like-bar-post ion-icon {
+        margin: 3px 0;
+        font-size: 1.5rem;
+    }
+
+    .card-content-post {
+        margin-left: 10px;
+        margin-top: 30px;
+    }
+
+    .card-body-post {
+        margin-top: -13px;
+        margin-left: -10px;
+    }
+
+    .top-bar-post {
+        margin-top: 4px;
+        font-size: 1.5rem;
+        display: flex;
+    }
+
+        .top-bar-post .username-post {
+            color: white;
+            order: 2;
+        }
+
+        .top-bar-post .group-post,
+        .top-bar-post .elapsed-time-post {
+            color: darkgray;
+            font-size: 1.2rem;
+        }
+
+    .user-icon-post {
+        order: 1;
+        border-radius: 50%;
+        margin-right: 8px;
+        align-self: center;
+    }
+
+    .card-body-post .card-title-post {
+        font-size: 2rem;
+        color: white;
+        margin-right: 4px;
+        margin-top: 4px;
+    }
+
+    .likes-count-post {
+        font-size: 1.5rem;
+    }
+
+    .username-post, .group-post, .elapsed-time-post {
+        align-self: flex-end;
+    }
+</style>
+
+<div class="post-container">
+    <div class="card card-post mb-3">
+        <div class="like-bar like-bar-post">
+            <div class="like-container">
+                <ion-icon name="arrow-up-circle-outline"></ion-icon>
+                <span class="likes-count likes-count-post">@Model.LikesCount</span>
+                <ion-icon name="arrow-down-circle-outline"></ion-icon>
+            </div>
+        </div>
+        <div class="card-body card-body-post">
+            <div class="top-bar top-bar-post">
+                @if (Model.Group != null)
+                {
+                    <span class="group group-post">g/@Model.Group.Name</span>
+                    <a href="/User/Preview/@Model.User.ID" class="username username-post">u/@Model.User.Username</a>
+                    <span class="elapsed-time elapsed-time-post" data-iso-time="@Model.CreatedAt.ToString("o")">@Model.CreatedAt</span>
+                }
+                else
+                {
+                    <img class="user-icon user-icon-post" src="@(!String.IsNullOrEmpty(Model.User.Photo) ? $"data:image/png;base64, {Model.User.Photo}" : "http://ssl.gstatic.com/accounts/ui/avatar_2x.png")" alt="avatar" style="width: 36px; height: 36px; object-fit: cover; border-radius:50%;" />
+                    <a href="/User/Preview/@Model.User.ID" class="username username-post">u/@Model.User.Username</a>
+                    <span class="elapsed-time elapsed-time-post" data-iso-time="@Model.CreatedAt.ToString("o")">@Model.CreatedAt</span>
+                }
+            </div>
+            <h5 class="card-title card-title-post">@Model.Title</h5>
+            <p class="card-content card-content-post">@Model.Content</p>
+        </div>
+    </div>
+
+    <!-- Container for the comments section -->
+    <div id="post-comments-container"></div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        loadComments();
+
+        function loadComments() {
+            $.ajax({
+                url: "/Comment/GetPostComments/@Model.ID",
+                type: "GET",
+                success: function (response) {
+                    $("#post-comments-container").html(response);
+                }
+            });
+        }
+    });
+</script>

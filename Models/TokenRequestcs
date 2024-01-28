@@ -1,0 +1,9 @@
+﻿namespace Forum_Management_System.Models
+{
+    public class TokenRequestDTO
+    {
+       public string Email { get; set; }
+
+       public string Password { get; set; }
+    }
+}

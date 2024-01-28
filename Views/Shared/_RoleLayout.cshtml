@@ -1,0 +1,233 @@
+﻿@using System.Security.Claims;
+@{
+    if (User.Identity.IsAuthenticated)
+    {
+        var adminClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role);
+        if (adminClaim != null && adminClaim.Value == "Admin")
+        {
+            Layout = "_AdminLayout";
+        }
+        else
+        {
+            Layout = "_MemberLayout";
+        }
+    }
+    else
+    {
+        Layout = "_GuestLayout";
+    }
+    @RenderBody();
+}
+<script>
+    function updateURLParameter(param, value) {
+        parameters[param] = value;
+        if (param == 'search') {
+            parameters['page'] = 1;
+        }
+        console.log(parameters); //troubleshoot
+        var url = new URL(window.location.href);
+        if (value) {
+            url.searchParams.set(param, value);
+        } else {
+            // Remove the param entirely if the value is an empty string.
+            url.searchParams.delete(param);
+        }
+        history.pushState({}, '', url);
+    }
+</script>
+<style>
+    .username-mini {
+        text-decoration: none;
+    }
+    .card.card-mini:hover {
+        border: 1px solid white !important;
+    }
+
+    .card-mini {
+        display: flex;
+        flex-direction: row;
+        cursor: pointer;
+        border: 1px solid transparent;
+        position: relative;
+    }
+
+    .like-bar-mini {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        margin: 0;
+        background-color: #1a1d21;
+        box-sizing: border-box;
+        width: 30px;
+        min-width: 30px;
+        position: relative;
+        overflow:hidden;
+        top: 0;
+        bottom: 0;
+    }
+
+    .like-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start; /* Changed to push the children towards the top */
+        margin-top: 3px;
+        width: 100%;
+        gap: 2px;
+        trainsition: transform 0.3s ease-in-out;
+        /* Removed the translateY transform */
+    }
+
+        .like-container ion-icon:hover {
+            transform: scale(1.2); /* This will increase the icon size by 25% on hover */
+        }
+
+    .username-mini:hover {
+        color: #777777 !important;
+    }
+
+    .username-mini {
+        text-decoration: none;
+    }
+
+    .like-bar-mini ion-icon {
+        margin: 2px 0;
+    }
+
+    .card-body-mini {
+        margin-top: -13px;
+        margin-left: -5px;
+    }
+
+    .top-bar-mini {
+        margin-top: 2px;
+        font-size: 1rem;
+    }
+
+        .top-bar-mini .username-mini {
+            color: white;
+            order: 2;
+        }
+
+        .top-bar-mini .group-mini,
+        .top-bar-mini .elapsed-time-mini {
+            color: darkgray;
+        }
+
+    .user-icon-mini {
+        order: 1;
+        border-radius: 50%;
+        margin-right: 4px;
+    }
+
+    .card-body-mini .card-title-mini {
+        font-size: 1.2rem;
+        color: white;
+        margin-right: 2px;
+        margin-top: 2px;
+    }
+
+    .card-content-mini {
+        color: white;
+        background: linear-gradient(to bottom, rgba(33, 37, 41, 0) 0%, rgba(33, 37, 41, 1) 100%);
+    }
+
+    body {
+            color: #fff;
+        }
+
+        h1.mt-0 {
+            margin-top: 0;
+        }
+
+        .form-inline .form-control {
+            width: 400px;
+        }
+
+        .container.mt-4 {
+            padding: 20px;
+            border-radius: 5px;
+            color: #fff;
+        }
+
+        .card {
+            background-color: #212529;
+            color: #fff;
+        }
+
+        .card-link {
+            color: #fff;
+        }
+
+            .card-link:hover {
+                text-decoration: underline;
+            }
+
+        .sidebar-item {
+            background-color: #212529;
+            color: #fff;
+            border: 1px solid #fff;
+            border-radius: 5px;
+        }
+
+            .sidebar-item:hover {
+                background-color: #fff;
+                color: #000;
+            }
+
+        .pagination-dropdown {
+            width: 80px;
+            min-width: 80px;
+            max-width: 80px;
+            padding: 0;
+            margin: 0;
+            border: none;
+        }
+
+        .pagination-dropdown-menu {
+            background-color: #212529;
+            padding: 0;
+            margin: 0;
+            border: none;
+            width: 80px;
+            min-width: 80px;
+            max-width: 80px;
+        }
+
+            .pagination-dropdown-menu:focus-visible {
+                width: 80px;
+                min-width: 80px;
+                max-width: 80px;
+                background-color: #212529;
+                padding: 0;
+                margin: 0;
+            }
+
+        .btn.btn-dark.dropdown-toggle.pagination-dropdown-toggle {
+            width: 80px !important;
+            height: 38px !important;
+            padding: 0;
+            margin: 0;
+        }
+
+        .pagination-dropdown-toggle:hover {
+            color: #212529;
+            background: #fff;
+        }
+
+        .pagination-dropdown-item {
+            background-color: #212529 !important;
+            color: #fff !important;
+            width: 80px;
+        }
+
+            .pagination-dropdown-item:hover {
+                background-color: #fff !important;
+                color: #212529 !important;
+            }
+
+        .login-popup .modal-content {
+            background-color: #f8f9fa;
+        }
+</style>

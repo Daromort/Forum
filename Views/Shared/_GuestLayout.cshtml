@@ -1,0 +1,52 @@
+﻿@{
+    Layout = "_Layout";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- Head content if needed -->
+</head>
+<body>
+    <style>
+        .modal-content {
+            background-color: #212529;
+            color: #fff;
+        }
+    </style>
+    <!-- Reusable modals for guest visitors -->
+
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="card bg-dark text-white" style="border-radius: 1rem;">
+                    <div class="card-body p-5 text-center">
+                        <!-- Load _Login via AJAX-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GuestNavBar Modal-->
+    <!-- ToDo - probably updated this to AJAX as well -->
+    @Html.Partial("_GuestNavBar") 
+
+    <!-- Scripts -->
+    <script>
+        $('.nav-link-signin').click(function () {
+            $.get('@Url.Action("Login", "Login")')
+                .done(function (data) {
+                    $('#loginModal .card-body').html(data);
+                    $('#loginModal').modal('show');
+                })
+                .fail(function () {
+                    alert("AJAX request failed");
+                });
+        });
+            
+    </script>
+    @RenderBody()
+</body>
+</html>
+
